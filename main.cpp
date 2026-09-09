@@ -1,6 +1,5 @@
 #include "raylib.h"
-#include "Fluid.h"
-#include <cstdio>
+#include "fluid.h"
 
 int main() {
     Fluid f(1000.0f, 10, 10, 0.1f);
