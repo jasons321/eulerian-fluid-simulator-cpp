@@ -180,3 +180,14 @@ void Fluid::advectSmoke(float dt) {
 
     std::swap(m, newM);
 }
+
+void Fluid::simulate(float dt, float gravity, int numIters, float overRelaxation) {
+    integrate(dt, gravity);
+
+    std::fill(p.begin(), p.end(), 0.0f);
+    solveIncompressibility(numIters, dt, overRelaxation);
+
+    extrapolate();
+    advectVel(dt);
+    advectSmoke(dt);
+}

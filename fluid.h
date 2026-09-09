@@ -15,6 +15,7 @@ public:
     void extrapolate();
     void advectVel(float dt);
     void advectSmoke(float dt);
+    void simulate(float dt, float gravity, int numIters, float overRelaxation);
 
 
     inline int idx(int i, int j) const {
