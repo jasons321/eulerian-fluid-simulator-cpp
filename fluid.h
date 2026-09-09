@@ -10,7 +10,11 @@ public:
     void integrate(float dt, float gravity);
     void solveIncompressibility(int iterations, float dt, float overRelaxation);
     float sampleField(float x, float y, FieldType field) const; // bilinear interpolation
+    float avgV(int i, int j); // average velocity magnitude at cell (i,j)
+    float avgU(int i, int j); // average velocity magnitude at cell (i,j)
     void extrapolate();
+    void advectVel(float dt);
+
 
     inline int idx(int i, int j) const {
         return i + j * numX;
@@ -26,3 +30,5 @@ public:
     std::vector<float> s;
     std::vector<float> m, newM;
 };
+
+

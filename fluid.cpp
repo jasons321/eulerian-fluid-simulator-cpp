@@ -108,3 +108,53 @@ void Fluid::extrapolate() {
         v[idx(numX - 1, j)] = v[idx(numX - 2, j)];
     }
 }
+
+float Fluid::avgV(int i, int j) {
+    float vSum = (v[idx(i - 1, j)] + v[idx(i, j)] +
+               v[idx(i - 1, j + 1)] + v[idx(i, j + 1)]) * 0.25f;
+    return vSum;
+}
+
+float Fluid::avgU(int i, int j) {
+    float uSum   = (u[idx(i - 1, j)] + u[idx(i, j)] +
+               u[idx(i - 1, j + 1)] + u[idx(i, j + 1)]) * 0.25f;
+    return uSum;
+}
+
+void Fluid::advectVel(float dt) {
+    float h2 = 0.5f * h;
+
+    for (int i = 1; i < numX; ++i) {
+        for (int j = 1; j < numY; ++j) {
+            if (s[idx(i, j)] != 0.0f && s[idx(i - 1, j)] != 0.0f && j < numY - 1) {
+                float x = i * h;
+                float y = j * h + h2;
+
+                float currU = u[idx(i, j)];
+                float currV = avgV(i, j);
+
+                x = x - dt * currU;
+                y = y - dt * currV;
+
+                float sampledU = sampleField(x, y, FieldType::U);
+                newU[idx(i, j)] = sampledU;
+            }
+            if (s[idx(i, j)] != 0.0f && s[idx(i, j - 1)] != 0.0f && i < numX - 1) {
+                float x = i * h + h2;
+                float y = j * h;
+
+                float currU = avgU(i, j);
+                float currV = v[idx(i, j)];
+
+                x = x - dt * currU;
+                y = y - dt * currV;
+
+                float sampledV = sampleField(x, y, FieldType::V);
+                newV[idx(i, j)] = sampledV;
+            }
+        }
+    }
+
+    std::swap(u, newU);
+    std::swap(v, newV);
+}
