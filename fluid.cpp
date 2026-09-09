@@ -149,12 +149,34 @@ void Fluid::advectVel(float dt) {
                 x = x - dt * currU;
                 y = y - dt * currV;
 
-                float sampledV = sampleField(x, y, FieldType::V);
-                newV[idx(i, j)] = sampledV;
+                newV[idx(i, j)] = sampleField(x, y, FieldType::V);
             }
         }
     }
 
     std::swap(u, newU);
     std::swap(v, newV);
+}
+
+void Fluid::advectSmoke(float dt) {
+    float h2 = 0.5f * h;
+
+    for (int i = 1; i < numX; ++i) {
+        for (int j = 1; j < numY; ++j) {
+            if (s[idx(i, j)] != 0.0f) {
+                float x = i * h + h2;
+                float y = j * h + h2;
+
+                float currU = avgU(i, j);
+                float currV = avgV(i, j);
+
+                x = x - dt * currU;
+                y = y - dt * currV;
+
+                newM[idx(i, j)] = sampleField(x, y, FieldType::SMOKE);
+            }
+        }
+    }
+
+    std::swap(m, newM);
 }

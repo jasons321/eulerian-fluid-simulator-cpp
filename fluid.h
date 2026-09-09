@@ -14,6 +14,7 @@ public:
     float avgU(int i, int j); // average velocity magnitude at cell (i,j)
     void extrapolate();
     void advectVel(float dt);
+    void advectSmoke(float dt);
 
 
     inline int idx(int i, int j) const {
